@@ -107,14 +107,14 @@ export default function ClockCompare() {
     }
 
     // Try to get user's location with better error handling
-    if (navigator.geolocation) {
-      const timeoutId = setTimeout(() => {
-        // Fallback if geolocation takes too long
-        console.log("Geolocation request timed out")
-        setDefaultLocation(setInputLocation, setInputTime, setIsLoading, defaultInputLocation)
-      }, 3000)
+    try {
+      if (typeof navigator !== "undefined" && navigator.geolocation) {
+        const timeoutId = setTimeout(() => {
+          // Fallback if geolocation takes too long
+          console.log("Geolocation request timed out")
+          setDefaultLocation(setInputLocation, setInputTime, setIsLoading, defaultInputLocation)
+        }, 3000)
 
-      try {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
             clearTimeout(timeoutId)
@@ -172,12 +172,12 @@ export default function ClockCompare() {
           },
           { timeout: 5000, maximumAge: 60000 },
         )
-      } catch (error) {
-        clearTimeout(timeoutId)
-        console.error("Geolocation API access error:", error)
+      } else {
+        // Handle the case when geolocation is not available
         setDefaultLocation(setInputLocation, setInputTime, setIsLoading, defaultInputLocation)
       }
-    } else {
+    } catch (error) {
+      console.error("Geolocation API access error:", error)
       setDefaultLocation(setInputLocation, setInputTime, setIsLoading, defaultInputLocation)
     }
   }, [defaultInputLocation])
