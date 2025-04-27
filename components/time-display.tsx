@@ -61,11 +61,11 @@ export default function TimeDisplay({
   const isDayTime = isDaytime(currentTime)
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center">
-      <h3 className={`text-base font-medium mb-2 ${textColorClass}`}>{location.location}</h3>
+    <div className="flex-1 flex flex-col items-center justify-center mt-1 sm:mt-2 md:mt-3">
+      <h3 className={`text-base font-medium mb-1 sm:mb-2 ${textColorClass}`}>{location.location}</h3>
 
       {isEditing ? (
-        <div className="flex items-center space-x-2 mb-2">
+        <div className="flex items-center space-x-2 mb-1 sm:mb-2">
           <Input
             value={editHour}
             onChange={(e) => setEditHour(e.target.value)}
@@ -101,15 +101,15 @@ export default function TimeDisplay({
 
           {/* Now button - only show when time has been manually edited */}
           {isInput && !autoUpdateTime && onResetTime && (
-            <Button variant="outline" size="sm" className="mt-2 text-xs h-7 px-3 py-1" onClick={onResetTime}>
+            <Button variant="outline" size="sm" className="mt-1 sm:mt-2 text-xs h-7 px-3 py-1" onClick={onResetTime}>
               Now
             </Button>
           )}
         </div>
       )}
 
-      <div className={`text-base mt-2 ${textColorClass}`}>{currentTime.toFormat("MMMM d, yyyy")}</div>
-      <div className={`mt-1 text-sm ${textColorClass}`}>{isDayTime ? "Daytime" : "Nighttime"}</div>
+      <div className={`text-base mt-1 sm:mt-2 ${textColorClass}`}>{currentTime.toFormat("MMMM d, yyyy")}</div>
+      <div className={`mt-0.5 sm:mt-1 text-sm ${textColorClass}`}>{isDayTime ? "Daytime" : "Nighttime"}</div>
     </div>
   )
 }

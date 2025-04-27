@@ -240,46 +240,52 @@ export default function ClockCompare() {
         <Settings className="h-5 w-5" />
       </button>
 
-      {/* Input location (top half) */}
-      <div
-        className={`flex-1 flex flex-col p-6 pb-3 md:pb-6 transition-colors duration-500 ${getBackgroundColor(inputTime)}`}
-      >
-        <div className="flex flex-col w-full">
-          <LocationSelector
-            label="Input Location"
-            selectedLocation={inputLocation}
-            onLocationChange={setInputLocation}
-            onTimeChange={setInputTime}
+      <div className="flex flex-col h-full">
+        {/* Input location (top half) */}
+        <div
+          className={`flex-1 flex flex-col p-6 pb-1 sm:pb-2 md:pb-6 transition-colors duration-500 ${getBackgroundColor(
+            inputTime,
+          )}`}
+        >
+          <div className="flex flex-col w-full">
+            <LocationSelector
+              label="Input Location"
+              selectedLocation={inputLocation}
+              onLocationChange={setInputLocation}
+              onTimeChange={setInputTime}
+            />
+          </div>
+
+          <TimeDisplay
+            location={inputLocation}
+            time={inputTime}
+            isLight={isLightBackground(getBackgroundColor(inputTime))}
+            isInput={true}
+            onTimeChange={handleInputTimeChange}
+            autoUpdateTime={autoUpdateTime}
+            onResetTime={resetToCurrentTime}
           />
         </div>
 
-        <TimeDisplay
-          location={inputLocation}
-          time={inputTime}
-          isLight={isLightBackground(getBackgroundColor(inputTime))}
-          isInput={true}
-          onTimeChange={handleInputTimeChange}
-          autoUpdateTime={autoUpdateTime}
-          onResetTime={resetToCurrentTime}
-        />
-      </div>
-
-      {/* Output location (bottom half) */}
-      <div
-        className={`flex-1 flex flex-col p-6 pt-3 md:pt-6 transition-colors duration-500 ${getBackgroundColor(outputTime)}`}
-      >
-        <div className="w-full">
-          <LocationSelector
-            label="Output Location"
-            selectedLocation={outputLocation}
-            onLocationChange={setOutputLocation}
+        {/* Output location (bottom half) */}
+        <div
+          className={`flex-1 flex flex-col p-6 pt-1 sm:pt-2 md:pt-6 transition-colors duration-500 ${getBackgroundColor(
+            outputTime,
+          )}`}
+        >
+          <div className="w-full">
+            <LocationSelector
+              label="Output Location"
+              selectedLocation={outputLocation}
+              onLocationChange={setOutputLocation}
+            />
+          </div>
+          <TimeDisplay
+            location={outputLocation}
+            time={outputTime}
+            isLight={isLightBackground(getBackgroundColor(outputTime))}
           />
         </div>
-        <TimeDisplay
-          location={outputLocation}
-          time={outputTime}
-          isLight={isLightBackground(getBackgroundColor(outputTime))}
-        />
       </div>
 
       {/* Settings modal */}

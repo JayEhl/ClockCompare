@@ -71,10 +71,10 @@ export default function LocationSelector({ label, selectedLocation, onLocationCh
   }
 
   return (
-    <div className="space-y-2 w-full">
+    <div className="space-y-1 sm:space-y-2 w-full">
       <h2 className="text-base font-medium">{label}</h2>
 
-      <div className="space-y-2 w-full">
+      <div className="space-y-1 sm:space-y-2 w-full">
         <div className="relative w-full">
           <div className="relative w-full" ref={searchRef}>
             <Input
@@ -85,7 +85,7 @@ export default function LocationSelector({ label, selectedLocation, onLocationCh
                 setShowResults(true)
               }}
               onFocus={() => setShowResults(true)}
-              className="pr-10 text-sm h-9 w-full"
+              className="pr-10 text-sm h-8 sm:h-9 w-full"
             />
             {searchQuery && (
               <button
@@ -127,7 +127,7 @@ export default function LocationSelector({ label, selectedLocation, onLocationCh
 
         {/* Selected location display */}
         {selectedLocation.location && (
-          <div className="p-3 bg-gray-50 rounded-md flex items-center justify-between w-full">
+          <div className="p-2 sm:p-3 bg-gray-50 rounded-md flex items-center justify-between w-full">
             <div>
               <div className="text-sm font-medium">{selectedLocation.location}</div>
               <div className="text-xs text-gray-500">{selectedLocation.timezone}</div>
