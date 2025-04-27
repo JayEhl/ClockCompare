@@ -71,14 +71,14 @@ export default function LocationSelector({ label, selectedLocation, onLocationCh
   }
 
   return (
-    <div className="space-y-3 w-full">
+    <div className="space-y-2 w-full">
       <h2 className="text-base font-medium">{label}</h2>
 
-      <div className="space-y-3 w-full">
+      <div className="space-y-2 w-full">
         <div className="relative w-full">
           <div className="relative w-full" ref={searchRef}>
             <Input
-              placeholder="Search for any city..."
+              placeholder={selectedLocation.location ? "Change location..." : "Search for any city..."}
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value)

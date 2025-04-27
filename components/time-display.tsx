@@ -52,7 +52,7 @@ export default function TimeDisplay({
   if (!location.location || !location.timezone || !currentTime.isValid) {
     return (
       <div className="flex-1 flex items-center justify-center">
-        <p className="text-gray-500 text-sm">Select a location to display time</p>
+        <p className="text-gray-500 text-sm">Please select a location</p>
       </div>
     )
   }

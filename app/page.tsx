@@ -7,28 +7,6 @@ import LocationSelector from "@/components/location-selector"
 import TimeDisplay from "@/components/time-display"
 import SettingsModal from "@/components/settings-modal"
 
-// Update the default location function to use the new structure
-function setDefaultLocation(setInputLocation, setInputTime, setIsLoading, savedDefaultInput = null) {
-  // Use saved default if available, otherwise use New York
-  if (savedDefaultInput && savedDefaultInput.location && savedDefaultInput.timezone) {
-    setInputLocation(savedDefaultInput)
-    setInputTime(DateTime.now().setZone(savedDefaultInput.timezone))
-    setIsLoading(false)
-    return
-  }
-
-  const defaultLocation = "New York, United States"
-  const defaultTimezone = "America/New_York"
-
-  setInputLocation({
-    location: defaultLocation,
-    timezone: defaultTimezone,
-  })
-
-  setInputTime(DateTime.now().setZone(defaultTimezone))
-  setIsLoading(false)
-}
-
 export default function ClockCompare() {
   const [inputLocation, setInputLocation] = useState({
     location: "",
@@ -42,7 +20,6 @@ export default function ClockCompare() {
   const [outputTime, setOutputTime] = useState(DateTime.now())
   const [showSettings, setShowSettings] = useState(false)
   const [useDynamicBackground, setUseDynamicBackground] = useState(true)
-  const [isLoading, setIsLoading] = useState(true)
   const [autoUpdateTime, setAutoUpdateTime] = useState(true)
   const [defaultInputLocation, setDefaultInputLocation] = useState(null)
   const [defaultOutputLocation, setDefaultOutputLocation] = useState(null)
@@ -61,6 +38,16 @@ export default function ClockCompare() {
 
         setUseDynamicBackground(savedDynamicBg !== undefined ? savedDynamicBg : true)
 
+        // Apply default locations if they exist
+        if (savedInputLocation && savedInputLocation.location && savedInputLocation.timezone) {
+          setInputLocation(savedInputLocation)
+          setInputTime(DateTime.now().setZone(savedInputLocation.timezone))
+        }
+
+        if (savedOutputLocation && savedOutputLocation.location && savedOutputLocation.timezone) {
+          setOutputLocation(savedOutputLocation)
+        }
+
         // Store default locations in state
         if (savedInputLocation) {
           setDefaultInputLocation(savedInputLocation)
@@ -68,8 +55,6 @@ export default function ClockCompare() {
 
         if (savedOutputLocation) {
           setDefaultOutputLocation(savedOutputLocation)
-          // Apply default output location if it exists
-          setOutputLocation(savedOutputLocation)
         }
       } catch (error) {
         console.error("Error parsing saved settings:", error)
@@ -91,6 +76,16 @@ export default function ClockCompare() {
 
         setUseDynamicBackground(savedDynamicBg !== undefined ? savedDynamicBg : true)
 
+        // Apply default locations if they exist
+        if (savedInputLocation && savedInputLocation.location && savedInputLocation.timezone) {
+          setInputLocation(savedInputLocation)
+          setInputTime(DateTime.now().setZone(savedInputLocation.timezone))
+        }
+
+        if (savedOutputLocation && savedOutputLocation.location && savedOutputLocation.timezone) {
+          setOutputLocation(savedOutputLocation)
+        }
+
         // Store default locations in state
         if (savedInputLocation) {
           setDefaultInputLocation(savedInputLocation)
@@ -98,89 +93,12 @@ export default function ClockCompare() {
 
         if (savedOutputLocation) {
           setDefaultOutputLocation(savedOutputLocation)
-          // Apply default output location if it exists
-          setOutputLocation(savedOutputLocation)
         }
       } catch (error) {
         console.error("Error migrating legacy settings:", error)
       }
     }
-
-    // Try to get user's location with better error handling
-    try {
-      if (typeof navigator !== "undefined" && navigator.geolocation) {
-        const timeoutId = setTimeout(() => {
-          // Fallback if geolocation takes too long
-          console.log("Geolocation request timed out")
-          setDefaultLocation(setInputLocation, setInputTime, setIsLoading, defaultInputLocation)
-        }, 3000)
-
-        navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            clearTimeout(timeoutId)
-            try {
-              const { latitude, longitude } = position.coords
-
-              // Instead of relying on external APIs that might fail,
-              // let's use a simpler approach for the preview
-              // We'll use the Intl API to get the timezone
-              const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
-
-              // If we have a default input location, use that instead of geolocation
-              if (defaultInputLocation && defaultInputLocation.location && defaultInputLocation.timezone) {
-                setInputLocation(defaultInputLocation)
-                setInputTime(DateTime.now().setZone(defaultInputLocation.timezone))
-                setIsLoading(false)
-                return
-              }
-
-              // Set a reasonable default location based on common timezones
-              let location = "New York, United States"
-              if (timezone.startsWith("Europe/London")) {
-                location = "London, United Kingdom"
-              } else if (timezone.startsWith("Europe/Paris")) {
-                location = "Paris, France"
-              } else if (timezone.startsWith("Europe/Berlin")) {
-                location = "Berlin, Germany"
-              } else if (timezone.startsWith("Asia/Tokyo")) {
-                location = "Tokyo, Japan"
-              } else if (timezone.startsWith("Asia/Shanghai")) {
-                location = "Shanghai, China"
-              } else if (timezone.startsWith("Asia/Colombo")) {
-                location = "Colombo, Sri Lanka"
-              } else if (timezone.startsWith("Australia/Sydney")) {
-                location = "Sydney, Australia"
-              } else if (timezone.startsWith("America/Los_Angeles")) {
-                location = "Los Angeles, United States"
-              }
-
-              setInputLocation({
-                location,
-                timezone,
-              })
-              setInputTime(DateTime.now().setZone(timezone))
-              setIsLoading(false)
-            } catch (error) {
-              console.error("Error processing location data:", error)
-              setDefaultLocation(setInputLocation, setInputTime, setIsLoading, defaultInputLocation)
-            }
-          },
-          (error) => {
-            clearTimeout(timeoutId)
-            console.error("Geolocation error:", error)
-            setDefaultLocation(setInputLocation, setInputTime, setIsLoading, defaultInputLocation)
-          },
-          { timeout: 5000, maximumAge: 60000 },
-        )
-      } else {
-        // Handle the case when geolocation is not available
-        setDefaultLocation(setInputLocation, setInputTime, setIsLoading, defaultInputLocation)
-      }
-    } catch (error) {
-      console.error("Geolocation API access error:", error)
-      setDefaultLocation(setInputLocation, setInputTime, setIsLoading, defaultInputLocation)
-    }
-  }, [defaultInputLocation])
+  }, [])
 
   // Update output time whenever input location, output location, or input time changes
   useEffect(() => {
@@ -323,7 +241,9 @@ export default function ClockCompare() {
       </button>
 
       {/* Input location (top half) */}
-      <div className={`flex-1 flex flex-col p-6 transition-colors duration-500 ${getBackgroundColor(inputTime)}`}>
+      <div
+        className={`flex-1 flex flex-col p-6 pb-3 md:pb-6 transition-colors duration-500 ${getBackgroundColor(inputTime)}`}
+      >
         <div className="flex flex-col w-full">
           <LocationSelector
             label="Input Location"
@@ -345,7 +265,9 @@ export default function ClockCompare() {
       </div>
 
       {/* Output location (bottom half) */}
-      <div className={`flex-1 flex flex-col p-6 transition-colors duration-500 ${getBackgroundColor(outputTime)}`}>
+      <div
+        className={`flex-1 flex flex-col p-6 pt-3 md:pt-6 transition-colors duration-500 ${getBackgroundColor(outputTime)}`}
+      >
         <div className="w-full">
           <LocationSelector
             label="Output Location"
@@ -369,16 +291,6 @@ export default function ClockCompare() {
           onSave={saveSettings}
           onClose={() => setShowSettings(false)}
         />
-      )}
-
-      {/* Loading overlay */}
-      {isLoading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-4 rounded-lg shadow-lg">
-            <p className="text-sm">Setting up your location...</p>
-            <p className="text-xs text-gray-500 mt-1">If geolocation is disabled, we'll use a default location.</p>
-          </div>
-        </div>
       )}
     </main>
   )
