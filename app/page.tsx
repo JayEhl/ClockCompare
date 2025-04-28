@@ -224,9 +224,12 @@ export default function ClockCompare() {
       // Calculate perceived brightness (common formula)
       // If brightness > 128, it's considered light
       const brightness = (r * 299 + g * 587 + b * 114) / 1000
-      return brightness > 128
+
+      // More conservative threshold for better contrast
+      return brightness > 160
     }
 
+    // Default to assuming dark background for better contrast
     return false
   }
 

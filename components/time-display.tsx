@@ -57,8 +57,10 @@ export default function TimeDisplay({
     )
   }
 
-  // Always ensure text is visible regardless of background
-  const textColorClass = isLight ? "text-gray-900" : "text-gray-100"
+  // Enhanced contrast handling
+  // Always ensure high contrast regardless of background
+  const textColorClass = isLight ? "text-gray-900" : "text-white"
+  const secondaryTextClass = isLight ? "text-gray-700" : "text-gray-200"
   const isDayTime = isDaytime(currentTime)
 
   return (
@@ -94,7 +96,7 @@ export default function TimeDisplay({
           <div className="flex items-center">
             <div className={`text-5xl font-bold ${textColorClass}`}>{currentTime.toFormat("HH:mm")}</div>
             {isInput && onTimeChange && (
-              <button className="ml-2 text-gray-500 hover:text-gray-700" onClick={startEditing}>
+              <button className={`ml-2 ${secondaryTextClass} hover:opacity-80`} onClick={startEditing}>
                 <Edit2 size={18} />
               </button>
             )}
@@ -102,7 +104,12 @@ export default function TimeDisplay({
 
           {/* Now button - only show when time has been manually edited */}
           {isInput && !autoUpdateTime && onResetTime && (
-            <Button variant="outline" size="sm" className="mt-1 sm:mt-2 text-xs h-7 px-3 py-1" onClick={onResetTime}>
+            <Button
+              variant="outline"
+              size="sm"
+              className={`mt-1 sm:mt-2 text-xs h-7 px-3 py-1 ${isLight ? "" : "bg-gray-700 text-white border-gray-600 hover:bg-gray-600"}`}
+              onClick={onResetTime}
+            >
               Now
             </Button>
           )}
@@ -110,7 +117,7 @@ export default function TimeDisplay({
       )}
 
       <div className={`text-base mt-1 sm:mt-2 ${textColorClass}`}>{currentTime.toFormat("MMMM d, yyyy")}</div>
-      <div className={`mt-0.5 sm:mt-1 text-sm ${textColorClass}`}>{isDayTime ? "Daytime" : "Nighttime"}</div>
+      <div className={`mt-0.5 sm:mt-1 text-sm ${secondaryTextClass}`}>{isDayTime ? "Daytime" : "Nighttime"}</div>
     </div>
   )
 }

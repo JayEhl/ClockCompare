@@ -46,10 +46,6 @@ export default function HowItWorks() {
             <h2 className="text-xl font-semibold mb-3">Features</h2>
             <ul className="list-disc list-inside space-y-2 text-gray-700">
               <li>
-                <span className="font-medium">Dynamic backgrounds</span> - The background color changes based on the
-                local time in each location (day/night).
-              </li>
-              <li>
                 <span className="font-medium">Time editing</span> - Click the edit icon next to the input time to
                 manually set a specific time and see what time it will be in the output location.
               </li>
