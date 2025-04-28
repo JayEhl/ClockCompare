@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { Settings } from "lucide-react"
 import { DateTime } from "luxon"
+import Link from "next/link"
 import LocationSelector from "@/components/location-selector"
 import TimeDisplay from "@/components/time-display"
 import SettingsModal from "@/components/settings-modal"
@@ -231,6 +232,13 @@ export default function ClockCompare() {
 
   return (
     <main className="flex flex-col h-screen">
+      {/* How it works banner */}
+      <div className="bg-blue-600 text-white text-center py-2 px-4 shadow-md">
+        <Link href="/how-it-works" className="hover:underline font-medium">
+          How it works
+        </Link>
+      </div>
+
       {/* Settings button */}
       <button
         onClick={() => setShowSettings(true)}

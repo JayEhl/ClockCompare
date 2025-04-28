@@ -57,7 +57,8 @@ export default function TimeDisplay({
     )
   }
 
-  const textColorClass = isLight ? "text-gray-900" : "text-white"
+  // Always ensure text is visible regardless of background
+  const textColorClass = isLight ? "text-gray-900" : "text-gray-100"
   const isDayTime = isDaytime(currentTime)
 
   return (
