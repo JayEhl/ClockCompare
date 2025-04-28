@@ -242,7 +242,7 @@ export default function ClockCompare() {
       {/* Settings button */}
       <button
         onClick={() => setShowSettings(true)}
-        className="absolute top-4 right-4 z-10 p-2 rounded-full hover:bg-gray-200 transition-colors"
+        className="absolute top-12 right-4 z-10 p-2 rounded-full hover:bg-gray-200 transition-colors"
         aria-label="Settings"
       >
         <Settings className="h-5 w-5" />
